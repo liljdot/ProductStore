@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv"
+import productRoutes from "./routes/productRoutes";
 
 dotenv.config()
 
@@ -15,6 +16,8 @@ app.use(helmet()); // helmet is a security middleware for app protection by sett
 app.use(morgan("dev")); // automatically log requests to the console
 app.use(express.json()); // send and receive json data
 app.use(cors()); // handle cors errors
+//route specific middleware
+app.use("/api/products", productRoutes)
 
 app.get("/", (req, res) => {
     res.send("Hello from the server")
