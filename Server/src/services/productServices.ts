@@ -40,4 +40,11 @@ const getAllProducts: () => Promise<Product[]> = () => {
         .then(res => res.rows)
 }
 
-export default { initProducts, getAllProducts }
+const createProduct: (name: string, image: string, price: number) => Promise<Product> = (name, image, price) => {
+    return query<Product>(`INSERT INTO products (name, image, price) 
+        VALUES ('${name}', '${image}', ${price})
+        RETURNING *`)
+        .then(res => res.rows[0])
+}
+
+export default { initProducts, getAllProducts, createProduct }
