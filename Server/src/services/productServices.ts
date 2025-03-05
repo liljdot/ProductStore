@@ -40,6 +40,12 @@ const getAllProducts: () => Promise<Product[]> = () => {
         .then(res => res.rows)
 }
 
+const getProduct: (id: number) => Promise<Product> = id => {
+    return query<Product>(`SELECT * FROM products
+        WHERE id = ${id}`)
+        .then(res => res.rows[0])
+}
+
 const createProduct: (name: string, image: string, price: number) => Promise<Product> = (name, image, price) => {
     return query<Product>(`INSERT INTO products (name, image, price) 
         VALUES ('${name}', '${image}', ${price})
@@ -47,4 +53,14 @@ const createProduct: (name: string, image: string, price: number) => Promise<Pro
         .then(res => res.rows[0])
 }
 
-export default { initProducts, getAllProducts, createProduct }
+const updateProduct: (id: number, name: string, image: string, price: number) => Promise<Product> = (id, name, image, price) => {
+    return query<Product>(`UPDATE products
+        SET name = '${name}',
+        image = '${image}',
+        price = ${price}
+        WHERE id = ${id}
+        RETURNING *`)
+        .then(res => res.rows[0])
+}
+
+export default { initProducts, getAllProducts, getProduct, createProduct, updateProduct }

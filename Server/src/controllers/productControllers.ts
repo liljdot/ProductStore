@@ -13,8 +13,16 @@ const getAllProducts = (req: Request, res: AppResponse) => {
         })
 }
 
-const getProduct = (req: Request, res: Response) => {
+const getProduct = (req: Request, res: AppResponse) => {
+    const { id } = req.params
 
+    productServices.getProduct(Number(id))
+        .then(product => !product ? res.status(404).json({ status: 404, message: "Product does not exist", error: `Product with id: ${id} does not exist in database` })
+            : res.status(200).json({ status: 200, message: "Successful", data: product }))
+        .catch(error => {
+            console.log("Error getProduct", error)
+            res.status(500).json({ status: 500, message: "Internal Server Error", error })
+        })
 }
 
 // POST Requests
@@ -42,8 +50,33 @@ const createProduct = (req: Request, res: AppResponse) => {
 }
 
 // PATCH Requests
-const updateProduct = (req: Request, res: Response) => {
+const updateProduct = (req: Request, res: AppResponse) => {
+    const { id } = req.params
+    const { name, image, price } = req.body
+    let isError = false
+    const errors: string[] = []
 
+    if (name) {
+        isError = checkNameError(name, errors) || isError
+    }
+
+    if (image) {
+        isError = checkImageError(image, errors) || isError
+    }
+
+    if (price) {
+        isError = checkPriceError(price, errors) || isError
+    }
+
+    if (isError) {
+        return res.status(400).json({status: 400, message: "Please input all the fields correctly", error: errors})
+    }
+
+    productServices.getProduct(Number(id))
+        .then(product => !product ? res.status(404).json({ status: 404, message: "Product does not exist", error: `Product with id: ${id} does not exist in database` })
+            : productServices.updateProduct(Number(id), name || product.name, image || product.image, price || product.price))
+        .then(updateProduct => res.status(201).json({ status: 201, message: "Successfully updated product", data: updateProduct }))
+        .catch(error => res.status(500).json({ status: 500, message: "Internal server error", error }))
 }
 
 // DELETE Requests
