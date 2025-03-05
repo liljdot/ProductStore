@@ -1,7 +1,9 @@
+import { QueryResult } from "pg"
 import query from "../db"
+import { Product } from "../types"
 
-const initProducts: () => void = () => {
-    query(`CREATE TABLE IF NOT EXISTS products (
+const initProducts: () => Promise<void> = () => {
+    return query(`CREATE TABLE IF NOT EXISTS products (
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             image VARCHAR(255) NOT NULL,
@@ -32,8 +34,10 @@ const initProducts: () => void = () => {
         .catch(e => console.log(e))
 }
 
-initProducts()
-
-export const done = () => {
-    console.log("done")
+const getAllProducts: () => Promise<Product[]> = () => {
+    return query<Product>(`SELECT * FROM products
+        ORDER BY created_at DESC`)
+        .then(res => res.rows)
 }
+
+export default { initProducts, getAllProducts }

@@ -13,7 +13,7 @@ db.connect()
 
 db.on("error", err => console.log(err))
 
-const query: <T>(text: string, params?: any) => Promise<QueryResult<T[]>> = (text: string, params?: any) => {
+const query: <T extends object>(text: string, params?: any) => Promise<QueryResult<T>> = (text: string, params?: any) => {
     return db.query(text, params)
 }
 
