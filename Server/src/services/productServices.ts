@@ -63,4 +63,9 @@ const updateProduct: (id: number, name: string, image: string, price: number) =>
         .then(res => res.rows[0])
 }
 
-export default { initProducts, getAllProducts, getProduct, createProduct, updateProduct }
+const deleteProduct: (id: number) => Promise<void> = id => {
+    return query(`DELETE FROM products WHERE id = ${id}`)
+    .then(() => void 0)
+}
+
+export default { initProducts, getAllProducts, getProduct, createProduct, updateProduct, deleteProduct }
