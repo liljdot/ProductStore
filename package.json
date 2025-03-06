@@ -9,6 +9,7 @@
   },
   "name": "pernstack",
   "version": "1.0.0",
+  "type": "module",
   "main": "server/dist/index.js",
   "dependencies": {
     "@arcjet/node": "^1.0.0-beta.2",
@@ -68,6 +69,7 @@
     "to-regex-range": "^5.0.1",
     "tree-kill": "^1.2.2",
     "tsconfig": "^7.0.0",
+    "tsx": "^4.19.3",
     "undici-types": "^6.20.0",
     "v8-compile-cache-lib": "^3.0.1",
     "wrappy": "^1.0.2",
@@ -78,7 +80,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx ts-node-dev --respawn --transpile-only Server/src/index.ts",
     "build": "tsc",
-    "serve": "node Server/dist/index.js"
+    "serve": "node --es-module-specifier-resolution=node Server/dist/index.js",
+    "ts": "npx tsx watch Server/src/index.ts"
   },
   "keywords": [],
   "author": "",

@@ -1,6 +1,7 @@
-import { Client, QueryResult } from "pg"
+import pg, { QueryResult } from "pg"
 import dotenv from "dotenv"
 
+const {Client} = pg
 dotenv.config()
 
 const { DB_URL } = process.env

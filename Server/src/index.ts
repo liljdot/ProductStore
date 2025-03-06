@@ -1,11 +1,12 @@
 //imports
-import express from "express";
+import express from "express"
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import dotenv from "dotenv"
-import productRoutes from "./routes/productRoutes";
-import productServices from "./services/productServices";
+import productRoutes from "./routes/productRoutes.js";
+import productServices from "./services/productServices.js";
+import arcjetConfig from "./middleware/arcjetConfig.js";
 
 
 dotenv.config()
@@ -19,6 +20,7 @@ app.use(helmet()); // helmet is a security middleware for app protection by sett
 app.use(morgan("dev")); // automatically log requests to the console
 app.use(express.json()); // send and receive json data
 app.use(cors()); // handle cors errors
+app.use(arcjetConfig)
 //route specific middleware
 app.use("/api/products", productRoutes)
 
