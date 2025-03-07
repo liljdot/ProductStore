@@ -1,4 +1,4 @@
-interface Theme {
+export interface Theme {
     name: string
     label: string
     colors: string[]
