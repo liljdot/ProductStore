@@ -1,19 +1,23 @@
 import { create } from "zustand";
-import { fetchProducts } from "../api/productsApi";
+import { deleteProduct, fetchProducts } from "../api/productsApi";
 import { Product } from "../types";
-import { GetProductsError } from "../types/apiTypes";
+import { DeleteProductError, GetProductsError } from "../types/apiTypes";
 import { AxiosError } from "axios/";
+import toast from "react-hot-toast";
 
 interface ProductsStore {
-    products: Product[] | null
+    products: Product[]
     isLoading: boolean
     isError: boolean
-    error: any
+    error: string | null
     fetchProducts: () => void
+    deleteProductId: number | null
+    deleteError: string | null
+    deleteProduct: (id: number) => void
 }
 
 export const useProductsStore = create<ProductsStore>((set, get) => ({
-    products: null,
+    products: [],
     isLoading: false,
     isError: false,
     error: null,
@@ -29,5 +33,23 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
             })
             .then(() => set({ isLoading: false }))
 
+    },
+    deleteProductId: null,
+    deleteIsLoading: false,
+    deleteError: null,
+    deleteProduct: (id) => {
+        set({ deleteProductId: id })
+        deleteProduct(id)
+            .then(() => {
+                set(prev => ({ products: prev.products?.filter(product => product.id != id) }))
+                toast.success("Product has been deleted")
+            })
+            .catch((error: AxiosError<DeleteProductError>) => {
+                console.log(error.response?.data.message)
+                toast.error(error.response?.data.message || "Something went wrong")
+            })
+            .then(() => {
+                set({ deleteProductId: null })
+            })
     }
 }))

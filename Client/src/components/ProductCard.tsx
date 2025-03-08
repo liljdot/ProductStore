@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { Product } from "../types";
 import { EditIcon, Trash2Icon } from "lucide-react";
+import { useProductsStore } from "../store/useProductsStore";
 
 interface Props {
     product: Product
 }
 
 const ProductCard: React.FC<Props> = ({ product }) => {
+    const { deleteProduct, deleteProductId } = useProductsStore()
     return (
         <>
             <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
@@ -32,8 +34,8 @@ const ProductCard: React.FC<Props> = ({ product }) => {
                             <EditIcon className="size-4" />
                         </Link>
 
-                        <button className="btn btn-sm btn-error btn-outline">
-                            <Trash2Icon className="size-4" />
+                        <button disabled = {deleteProductId == product.id} className="btn btn-sm btn-error btn-outline" onClick={() => deleteProduct(product.id)}>
+                            {deleteProductId == product.id ? <div className="loading loading-spinner loading-xs"></div> : <Trash2Icon className="size-4" />}
                         </button>
                     </div>
                 </div>

@@ -11,3 +11,9 @@ export interface GetProductsError {
     message: string
     error: any
 }
+
+export interface DeleteProductError {
+    status: number
+    message: string
+    error: any
+}
