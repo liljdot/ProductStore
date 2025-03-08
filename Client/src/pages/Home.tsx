@@ -3,19 +3,22 @@ import { useProductsStore } from "../store/useProductsStore";
 import ProductsList from "../components/ProductsList";
 import { useEffect } from "react";
 import NoProducts from "../components/NoProducts";
+import AddProductModal from "../components/AddProductMOdal";
 
 const Home: React.FC = () => {
     const { fetchProducts, products, isError, error, isLoading } = useProductsStore()
-    
+    const modalElement = document.getElementById("add_product_modal") as HTMLDialogElement
+
     useEffect(() => {
         fetchProducts()
     }, [])
 
     return (
         <>
+            <AddProductModal />
             <main className="mx-auto px-4 py-8 max-w-6xl">
                 <div className="flex justify-between items-center mb-8">
-                    <button className="btn btn-primary">
+                    <button onClick={() => modalElement.showModal()} className="btn btn-primary">
                         <PlusCircleIcon className="size-5 mr-2" />
                         Add Product
                     </button>
@@ -35,9 +38,9 @@ const Home: React.FC = () => {
                     ) : !products.length ? (
                         <NoProducts />
                     ) : (
-                        <ProductsList products={products}/>
+                        <ProductsList products={products} />
                     )
-            }
+                }
             </main>
         </>
     )

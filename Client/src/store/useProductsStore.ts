@@ -1,9 +1,10 @@
 import { create } from "zustand";
-import { deleteProduct, fetchProducts } from "../api/productsApi";
+import { addProduct, deleteProduct, fetchProducts } from "../api/productsApi";
 import { Product } from "../types";
-import { DeleteProductError, GetProductsError } from "../types/apiTypes";
+import { CreateProductError, DeleteProductError, GetProductsError } from "../types/apiTypes";
 import { AxiosError } from "axios/";
 import toast from "react-hot-toast";
+import { ChangeEvent, EventHandler, FormEvent } from "react";
 
 interface ProductsStore {
     products: Product[]
@@ -11,6 +12,16 @@ interface ProductsStore {
     isError: boolean
     error: string | null
     fetchProducts: () => void
+    newProductFormData: {
+        name: string
+        price: number
+        image: string
+    }
+    setNewProductFormData: EventHandler<ChangeEvent<HTMLInputElement>>
+    resetNewProductForm: () => void
+    createProductIsLoading: boolean
+    createProductError: string | null
+    createProduct: EventHandler<FormEvent>
     deleteProductId: number | null
     deleteError: string | null
     deleteProduct: (id: number) => void
@@ -33,6 +44,33 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
             })
             .then(() => set({ isLoading: false }))
 
+    },
+    newProductFormData: {
+        name: "",
+        price: 0,
+        image: ""
+    },
+    setNewProductFormData: e => {
+        set(prev => ({ newProductFormData: { ...prev.newProductFormData, [e.target.name]: e.target.name == "price" ? Number(e.target.value) : e.target.value } }))
+    },
+    resetNewProductForm: () => set({ newProductFormData: { name: "", price: 0, image: "" } }),
+    createProductIsLoading: false,
+    createProductError: null,
+    createProduct: e => {
+        e.preventDefault()
+        set({ createProductIsLoading: true })
+        addProduct(get().newProductFormData)
+            .then(res => {
+                set(prev => ({ products: [res.data.data, ...prev.products] }))
+                get().resetNewProductForm()
+                toast.success("Product added successfully")
+            })
+            .catch((error: AxiosError<CreateProductError>) => {
+                console.log(error.response?.data.message)
+                set({ createProductError: error.response?.data.message })
+                toast(get().createProductError)
+            })
+            .then(() => set({ createProductIsLoading: false }))
     },
     deleteProductId: null,
     deleteIsLoading: false,
