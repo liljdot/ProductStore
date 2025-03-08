@@ -9,18 +9,18 @@ const arcjetConfig = (req: Request, res: AppResponse, next: NextFunction) => {
         .then(decision => {
             if (decision.isDenied()) {
                 if (decision.reason.isRateLimit()) {
-                    return Promise.reject({ status: 429, message: "Too many requests", error: decision.reason.type })
+                    return res.status(429).json({ status: 429, message: "Too many requests", error: decision.reason.type })
                 }
 
                 if (decision.reason.isBot()) {
-                    return Promise.reject({ status: 403, message: "Bot access denied", error: decision.reason.type })
+                    return res.status(403).json({ status: 403, message: "Bot access denied", error: decision.reason.type })
                 }
 
-                return Promise.reject({ status: 403, message: "Forbidden", error: decision.reason.type })
+                return res.status(403).json({ status: 403, message: "Forbidden", error: decision.reason.type })
             }
 
             if (decision.results.some(result => result.reason.isBot() && result.reason.isSpoofed())) {
-                return Promise.reject({ status: 403, message: "Spoofed bot detected", error: "Spoofed bot detected" })
+                return res.status(403).json({ status: 403, message: "Spoofed bot detected", error: "Spoofed bot detected" })
             }
 
             next()
