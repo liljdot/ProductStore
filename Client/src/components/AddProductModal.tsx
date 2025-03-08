@@ -1,4 +1,4 @@
-import AddProductForm from "./AddProduct Form"
+import AddProductForm from "./AddProductForm"
 
 
 const AddProductModal: React.FC = () => {
