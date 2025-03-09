@@ -3,7 +3,7 @@ import { useProductsStore } from "../store/useProductsStore";
 import ProductsList from "../components/ProductsList";
 import { useEffect } from "react";
 import NoProducts from "../components/NoProducts";
-import AddProductModal from "../components/AddProductMOdal";
+import AddProductModal from "../components/AddProductModal";
 
 const Home: React.FC = () => {
     const { fetchProducts, products, isError, error, isLoading } = useProductsStore()
