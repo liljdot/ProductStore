@@ -2,6 +2,7 @@ import { baseUrl } from ".";
 import axios from "axios";
 import { CreateProductResponseType, GetProductsResponseType, GetSingleProductResponseType } from "../types/apiTypes";
 import { NewProduct, Product } from "../types";
+import { Axios } from "axios/";
 
 export const fetchProducts: () => Axios.IPromise<Axios.AxiosXHR<GetProductsResponseType>> = () => {
     return axios.get<GetProductsResponseType>(`${baseUrl}/api/products`)
