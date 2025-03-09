@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { ShoppingBagIcon, ShoppingCartIcon } from "lucide-react"
 import ThemeSelector from "./ThemeSelector";
+import { useProductsStore } from "../store/useProductsStore";
 
 const Navbar: React.FC = () => {
     const { pathname } = useLocation()
     const isHomePage = pathname == "/"
+    const {products} = useProductsStore()
 
     return (
         <>
@@ -31,7 +33,7 @@ const Navbar: React.FC = () => {
                                 <div className="indicator">
                                     <div className="p-2 rounded-full hover:bg-base-200 transition-colors">
                                         <ShoppingBagIcon className="size-5" />
-                                        <span className="badge badge-sm badge-primary indicator-item">8</span>
+                                        <span className="badge badge-sm badge-primary indicator-item">{products.length}</span>
                                     </div>
                                 </div>
                             )}

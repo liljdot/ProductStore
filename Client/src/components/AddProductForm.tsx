@@ -2,7 +2,7 @@ import { useProductsStore } from "../store/useProductsStore";
 import { DollarSignIcon, ImageIcon, Package2Icon, PlusCircleIcon } from "lucide-react"
 
 const AddProductForm: React.FC = () => {
-    const { createProduct, newProductFormData, setNewProductFormData, createProductIsLoading, isLoading } = useProductsStore()
+    const { createProduct, newProductFormData, setNewProductFormData, createProductIsLoading } = useProductsStore()
 
     return (
         <>
