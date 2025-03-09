@@ -31,7 +31,7 @@ interface ProductsStore {
     updateProduct: EventHandler<FormEvent>
     deleteProductId: number | null
     deleteError: string | null
-    deleteProduct: (id: number) => Axios.IPromise<void>
+    deleteProduct: (id: number) => Promise<void>
 }
 
 export const useProductsStore = create<ProductsStore>((set, get) => ({
