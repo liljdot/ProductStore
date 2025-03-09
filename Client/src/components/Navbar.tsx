@@ -6,7 +6,7 @@ import { useProductsStore } from "../store/useProductsStore";
 const Navbar: React.FC = () => {
     const { pathname } = useLocation()
     const isHomePage = pathname == "/"
-    const {products} = useProductsStore()
+    const { products } = useProductsStore()
 
     return (
         <>
