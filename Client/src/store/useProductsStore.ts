@@ -1,10 +1,12 @@
 import { create } from "zustand";
-import { addProduct, deleteProduct, fetchProducts } from "../api/productsApi";
+import { addProduct, deleteProduct, fetchProducts, fetchSingleProduct } from "../api/productsApi";
 import { Product } from "../types";
 import { CreateProductError, DeleteProductError, GetProductsError } from "../types/apiTypes";
 import { AxiosError } from "axios/";
 import toast from "react-hot-toast";
 import { ChangeEvent, EventHandler, FormEvent } from "react";
+
+const modalElement = document.getElementById("add_product_modal") as HTMLDialogElement
 
 interface ProductsStore {
     products: Product[]
@@ -12,6 +14,8 @@ interface ProductsStore {
     isError: boolean
     error: string | null
     fetchProducts: () => void
+    currentProduct?: Product
+    fetchSingleProduct: (id: number) => void
     newProductFormData: {
         name: string
         price: number
@@ -33,7 +37,7 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
     isError: false,
     error: null,
     fetchProducts: () => {
-        set({ isLoading: true })
+        set({ isLoading: true, isError: false, error: null })
         fetchProducts()
             .then(res => {
                 set({ products: res.data.data, isError: false, error: null })
@@ -44,6 +48,22 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
             })
             .then(() => set({ isLoading: false }))
 
+    },
+    fetchSingleProduct: id => {
+        set({ isLoading: true, isError: false, error: null })
+        let product = get().products.find(product => product.id == id)
+
+        if (product) {
+            return set({ isLoading: false, currentProduct: product })
+        }
+
+        fetchSingleProduct(id)
+            .then(res => product = res.data.data)
+            .catch((error: AxiosError<GetProductsError>) => {
+                console.log(error.response?.data.message)
+                set({ isError: true, error: error.response?.data.message })
+            })
+            .then(() => set({ isLoading: false, currentProduct: product }))
     },
     newProductFormData: {
         name: "",
@@ -63,6 +83,7 @@ export const useProductsStore = create<ProductsStore>((set, get) => ({
             .then(res => {
                 set(prev => ({ products: [res.data.data, ...prev.products] }))
                 get().resetNewProductForm()
+                modalElement.close()
                 toast.success("Product added successfully")
             })
             .catch((error: AxiosError<CreateProductError>) => {
